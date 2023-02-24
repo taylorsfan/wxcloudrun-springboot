@@ -1,10 +1,15 @@
 package com.tencent.wxcloudrun.controller;
 
+import java.util.Map;
+import java.util.concurrent.TimeUnit;
+
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
 
 import lombok.extern.slf4j.Slf4j;
+import okhttp3.OkHttpClient;
+import okhttp3.OkHttpClient.Builder;
 
 /**
  * index控制器
@@ -12,6 +17,7 @@ import lombok.extern.slf4j.Slf4j;
 @Controller
 @Slf4j
 public class IndexController {
+    private static final OkHttpClient okHttpClient = new Builder().callTimeout(60, TimeUnit.SECONDS).build();
 
     /**
      * 主页页面
@@ -23,11 +29,14 @@ public class IndexController {
         return "index";
     }
 
-    @GetMapping("/validate")
+    @GetMapping("/msg")
     @ResponseBody
-    public String validate(String signature, String timestamp, String nonce, String echostr) {
-        log.info("signature={},timestamp={},nonce={},echostr={}", signature, timestamp, nonce, echostr);
-        return echostr;
+    public String validate(Map<String, String> map) {
+        map.forEach((k, v) -> {
+            log.info("k={},v={}", k, v);
+        });
+        return "";
     }
+
 
 }
